@@ -175,10 +175,14 @@ assign(QueryCompiler_MSSQL.prototype, {
   },
 
   offset: function() {
-    if (!this.single.offset) return '';
     var noLimit = !this.single.limit && this.single.limit !== 0;
+    var noOffset = !this.single.offset;
 
-    var offset = 'offset ' + this.formatter.parameter(this.single.offset) + ' rows';
+    if (noLimit && noOffset) return '';
+
+    var offset = '';
+
+    offset = 'offset ' + (noOffset ? '0' : this.formatter.parameter(this.single.offset)) + ' rows';
 
     if (!noLimit) {
       offset += ' fetch next ' + this.formatter.parameter(this.single.limit) + ' rows only'
